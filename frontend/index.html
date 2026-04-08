@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kanban Dashboard</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Phase 1</p>
+          <h1>Kanban Dashboard</h1>
+          <p class="hero-copy">
+            A simple 3-tier starter app with a Vercel-ready frontend and a Flask
+            backend that can later move to AWS services one by one.
+          </p>
+        </div>
+        <div class="hero-card">
+          <p class="hero-label">Backend Status</p>
+          <p id="healthStatus" class="status-pill status-loading">Checking...</p>
+          <p id="apiBaseLabel" class="hero-meta"></p>
+        </div>
+      </header>
+
+      <main>
+        <section class="panel task-form-panel">
+          <div class="panel-header">
+            <div>
+              <p class="section-label">Task Manager</p>
+              <h2 id="formTitle">Create a New Task</h2>
+            </div>
+            <button id="resetButton" class="ghost-button" type="button">
+              Clear Form
+            </button>
+          </div>
+
+          <form id="taskForm" class="task-form">
+            <input type="hidden" id="taskId" />
+
+            <label>
+              Task Title
+              <input
+                id="title"
+                name="title"
+                type="text"
+                maxlength="120"
+                placeholder="Example: Prepare AWS architecture notes"
+                required
+              />
+            </label>
+
+            <label>
+              Description
+              <textarea
+                id="description"
+                name="description"
+                rows="4"
+                maxlength="500"
+                placeholder="Add a short description for the task"
+              ></textarea>
+            </label>
+
+            <div class="form-row">
+              <label>
+                Priority
+                <select id="priority" name="priority">
+                  <option value="Low">Low</option>
+                  <option value="Medium" selected>Medium</option>
+                  <option value="High">High</option>
+                </select>
+              </label>
+
+              <label>
+                Status
+                <select id="status" name="status">
+                  <option value="To Do" selected>To Do</option>
+                  <option value="In Progress">In Progress</option>
+                  <option value="Done">Done</option>
+                </select>
+              </label>
+
+              <label>
+                Due Date
+                <input id="dueDate" name="dueDate" type="date" />
+              </label>
+            </div>
+
+            <div class="form-actions">
+              <button id="submitButton" class="primary-button" type="submit">
+                Add Task
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <section class="board-summary">
+          <div class="summary-card">
+            <span class="summary-label">Total Tasks</span>
+            <strong id="totalTasks">0</strong>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">To Do</span>
+            <strong id="todoCount">0</strong>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">In Progress</span>
+            <strong id="inProgressCount">0</strong>
+          </div>
+          <div class="summary-card">
+            <span class="summary-label">Done</span>
+            <strong id="doneCount">0</strong>
+          </div>
+        </section>
+
+        <section class="panel board-help-panel">
+          <p class="section-label">Board Controls</p>
+          <p class="board-help-copy">
+            Drag any task card into another column to change its status, or use the
+            status dropdown on the card if you prefer.
+          </p>
+        </section>
+
+        <section id="messageBanner" class="message-banner hidden"></section>
+
+        <section class="board-grid">
+          <article class="panel board-column" data-column-status="To Do">
+            <div class="column-header">
+              <h3>To Do</h3>
+              <span id="todoBadge" class="column-badge">0</span>
+            </div>
+            <div id="todoColumn" class="task-list" data-status="To Do"></div>
+          </article>
+
+          <article class="panel board-column" data-column-status="In Progress">
+            <div class="column-header">
+              <h3>In Progress</h3>
+              <span id="inProgressBadge" class="column-badge">0</span>
+            </div>
+            <div
+              id="inProgressColumn"
+              class="task-list"
+              data-status="In Progress"
+            ></div>
+          </article>
+
+          <article class="panel board-column" data-column-status="Done">
+            <div class="column-header">
+              <h3>Done</h3>
+              <span id="doneBadge" class="column-badge">0</span>
+            </div>
+            <div id="doneColumn" class="task-list" data-status="Done"></div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <template id="taskCardTemplate">
+      <article class="task-card" draggable="true">
+        <div class="task-card-top">
+          <span class="priority-pill"></span>
+          <span class="task-date"></span>
+        </div>
+        <h4 class="task-title"></h4>
+        <p class="task-description"></p>
+        <div class="task-card-bottom">
+          <select class="task-status-select" aria-label="Change task status">
+            <option value="To Do">To Do</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Done">Done</option>
+          </select>
+          <div class="task-actions">
+            <button class="small-button edit-button" type="button">Edit</button>
+            <button class="small-button delete-button" type="button">
+              Delete
+            </button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <script src="./api.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
